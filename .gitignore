@@ -1,0 +1,7 @@
+bin
+dist
+build-stamp
+configure-stamp
+commands.pyc
+.project
+.classpath
