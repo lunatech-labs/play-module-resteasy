@@ -1,7 +1,10 @@
 /*
     This file is part of resteasy-play-module.
     
-    Copyright Lunatech Research 2010
+    This is an adaptation of code in the RESTEasy project, under ASLv2 License 
+    (http://www.apache.org/licenses/LICENSE-2.0), probably Copyright JBoss or Bill Burke.
+    
+    This adaptation Copyright Lunatech Research 2010
 
     resteasy-play-module is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
