@@ -1,0 +1,11 @@
+play-1.1-resteasy-module-1.1 (1.1ubuntu1) lucid; urgency=low
+
+  * Upgrade to latest play-1.1
+
+ -- Stephane Epardaud <stephane@epardaud.net>  Tue, 17 Aug 2010 14:16:34 +0200
+
+play-1.1-resteasy-module-1.0 (1.0) UNRELEASED; urgency=low
+
+  * Initial release
+
+ -- Stephane Epardaud <stephane@epardaud.net>  Tue, 10 Aug 2010 14:18:02 +0200
