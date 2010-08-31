@@ -54,7 +54,7 @@ public class RESTEasyPlugin extends PlayPlugin {
 		Logger.info("RESTEasy plugin: "+message, params);
 	}
 
-	private ResteasyDeployment deployment = new ResteasyDeployment();
+	private ResteasyDeployment deployment;
 	private String path;
 	private Map<String, Class<?>> resourceClasses = new HashMap<String, Class<?>>();
 	private Map<String, Class<?>> providerClasses = new HashMap<String, Class<?>>();
@@ -72,35 +72,40 @@ public class RESTEasyPlugin extends PlayPlugin {
 	public void onApplicationStart(){
 		fixClassLoader();
 		try{
-			List<ApplicationClass> classes = Play.classes.all();
 			if(!started){
 				log("Starting RESTEasy");
-				// classes
-				for(ApplicationClass klass : classes){
-					if(!isJAXRSEntity(klass.javaClass, Path.class))
-						continue;
-					log("Found resource class: %s",klass.name);
-					resourceClasses.put(klass.name, klass.javaClass);
-				}
-				deployment.setResourceClasses(new ArrayList<String>(resourceClasses.keySet()));
-				// providers
-				for(ApplicationClass klass : classes){
-					if(!isJAXRSEntity(klass.javaClass, Provider.class))
-						continue;
-					log("Found provider class: %s",klass.name);
-					providerClasses.put(klass.name, klass.javaClass);
-				}
-				deployment.setProviderClasses(new ArrayList<String>(providerClasses.keySet()));
-				deployment.start();
+				deploy();
 				log("RESTEasy started");
 				started = true;
 			}else if(Play.mode != Mode.PROD){
-				reloadClasses(classes);
+				deploy();
 			}
 		}catch(Throwable t){
 			t.printStackTrace();
 			throw new RuntimeException(t);
 		}
+	}
+
+	private void deploy() {
+		List<ApplicationClass> classes = Play.classes.all();
+		deployment = new ResteasyDeployment();
+		// classes
+		for(ApplicationClass klass : classes){
+			if(!isJAXRSEntity(klass.javaClass, Path.class))
+				continue;
+			log("Found resource class: %s",klass.name);
+			resourceClasses.put(klass.name, klass.javaClass);
+		}
+		deployment.setResourceClasses(new ArrayList<String>(resourceClasses.keySet()));
+		// providers
+		for(ApplicationClass klass : classes){
+			if(!isJAXRSEntity(klass.javaClass, Provider.class))
+				continue;
+			log("Found provider class: %s",klass.name);
+			providerClasses.put(klass.name, klass.javaClass);
+		}
+		deployment.setProviderClasses(new ArrayList<String>(providerClasses.keySet()));
+		deployment.start();
 	}
 
 	private void fixClassLoader() {
@@ -125,24 +130,6 @@ public class RESTEasyPlugin extends PlayPlugin {
 			if(hasAnnotation(interfaceType, annotation))
 				return true;
 		return hasAnnotation(type.getSuperclass(), annotation);
-	}
-
-	private void reloadClasses(List<ApplicationClass> classes) {
-		log("Reloading RESTEasy");
-		Registry registry = deployment.getRegistry();
-		// clear the old ones
-		for(Class<?> klass : resourceClasses.values()){
-			registry.removeRegistrations(klass);
-		}
-		resourceClasses.clear();
-		// add the new ones
-		for(ApplicationClass klass : classes){
-			if(!isJAXRSEntity(klass.javaClass, Path.class))
-				continue;
-			log("Found resource class: %s",klass.name);
-			resourceClasses.put(klass.name, klass.javaClass);
-			registry.addPerRequestResource(klass.javaClass);
-		}
 	}
 
 	@Override
@@ -192,7 +179,7 @@ public class RESTEasyPlugin extends PlayPlugin {
 	public List<ApplicationClass> onClassesChange(List<ApplicationClass> modified) {
 		log("Classes change: "+modified.size());
 		if(Play.mode != Mode.PROD)
-			reloadClasses(modified);
+			deploy();
 		return super.onClassesChange(modified);
 	}
 

@@ -1,3 +1,9 @@
+play-1.1-resteasy-module-1.2 (1.2ubuntu1) lucid; urgency=low
+
+  * Fixed redeploy for DEV
+
+ -- Stephane Epardaud <stephane@epardaud.net>  Tue, 31 Aug 2010 14:49:00 +0200
+
 play-1.1-resteasy-module-1.1 (1.1ubuntu1) lucid; urgency=low
 
   * Upgrade to latest play-1.1
