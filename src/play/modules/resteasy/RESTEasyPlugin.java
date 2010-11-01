@@ -30,23 +30,13 @@ import javassist.Modifier;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
 
-import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.spi.HttpRequest;
-import org.jboss.resteasy.spi.HttpResponse;
-import org.jboss.resteasy.spi.Registry;
 import org.jboss.resteasy.spi.ResteasyDeployment;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import play.Logger;
 import play.Play;
-import play.PlayPlugin;
 import play.Play.Mode;
+import play.PlayPlugin;
 import play.classloading.ApplicationClasses.ApplicationClass;
-import play.db.jpa.JPAPlugin;
-import play.mvc.Http;
-import play.mvc.Scope;
-import play.mvc.Http.Request;
-import play.mvc.Http.Response;
 
 public class RESTEasyPlugin extends PlayPlugin {
 
@@ -54,8 +44,8 @@ public class RESTEasyPlugin extends PlayPlugin {
 		Logger.info("RESTEasy plugin: "+message, params);
 	}
 
-	private ResteasyDeployment deployment;
-	private String path;
+	public ResteasyDeployment deployment;
+	public String path;
 	private Map<String, Class<?>> resourceClasses = new HashMap<String, Class<?>>();
 	private Map<String, Class<?>> providerClasses = new HashMap<String, Class<?>>();
 	private boolean started;
@@ -130,49 +120,6 @@ public class RESTEasyPlugin extends PlayPlugin {
 			if(hasAnnotation(interfaceType, annotation))
 				return true;
 		return hasAnnotation(type.getSuperclass(), annotation);
-	}
-
-	@Override
-	public boolean rawInvocation(Http.Request request,
-			Http.Response response)
-	throws Exception{
-		log("Got a request: "+request.url);
-		if(request.path.startsWith(path+"/") 
-				|| request.path.equals(path)){
-			log("Got a request for us: "+request.url);
-			Play.detectChanges();
-			try{
-				fixClassLoader();
-				setupPlay(request, response);
-				JPAPlugin.startTx(false);
-				Dispatcher dispatcher = deployment.getDispatcher();
-				ResteasyProviderFactory factory = deployment.getProviderFactory();
-				HttpRequest restReq = new RESTEasyRequestWrapper(request, path);
-				HttpResponse restRep = new RESTEasyResponseWrapper(request, response, factory);
-				dispatcher.invoke(restReq, restRep);
-				JPAPlugin.closeTx(false);
-			}catch(Throwable t){
-				JPAPlugin.closeTx(true);
-				t.printStackTrace();
-				throw new RuntimeException(t);
-			}
-			return true;
-		}
-		return false;
-	}
-
-	private void setupPlay(Request request, Response response) {
-        Http.Request.current.set(request);
-        Http.Response.current.set(response);
-
-        Scope.Params.current.set(new Scope.Params());
-        Scope.RenderArgs.current.set(new Scope.RenderArgs());
-        // FIXME
-        // can't do that:
-        //Scope.Session.current.set(Scope.Session.restore());
-        Scope.Session.current.set(new Scope.Session());
-        // nor that
-        //Scope.Flash.current.set(Scope.Flash.restore());
 	}
 
 	@Override
