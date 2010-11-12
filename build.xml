@@ -2,7 +2,7 @@
 
 <project name="resteasy-play-module" default="build" basedir=".">
 
-	<property name="version" value="1.2"/>
+	<property name="version" value="1.3"/>
 	<property name="dist.dir-1.1" value="play-1.1-resteasy-module-${version}"/>
 	<property name="dist.dir-src" value="resteasy-play-module-${version}"/>
 
@@ -51,7 +51,10 @@
 		<!-- Play 1.1 distrib -->
 		<mkdir dir="dist/${dist.dir-1.1}"/>
 		<copy todir="dist/${dist.dir-1.1}/" >
-			<fileset dir="." includes="lib/**"/>
+			<fileset dir=".">
+				<include name="lib/**"/>
+				<include name="app/**"/>
+			</fileset>
 			<fileset file="commands.py"/>
 			<fileset file="COPYING"/>
 			<fileset file="COPYING.LESSER"/>
@@ -67,6 +70,7 @@
 			<fileset dir="." includes="lib/**"/>
 			<fileset dir="." includes="conf/**"/>
 			<fileset dir="." includes="src/**"/>
+			<fileset dir="." includes="app/**"/>
 			<fileset file="commands.py"/>
 			<fileset file="COPYING"/>
 			<fileset file="COPYING.LESSER"/>
