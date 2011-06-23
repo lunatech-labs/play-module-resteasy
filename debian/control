@@ -1,11 +1,11 @@
-Source: play-1.1-resteasy-module-1.4
+Source: play-1.2-resteasy-module-1.4
 Section: unknown
 Priority: extra
 Maintainer: Stephane Epardaud <stephane@epardaud.net>
 Build-Depends: debhelper (>= 7), play-1.2
 Standards-Version: 3.8.3
 
-Package: play-1.1-resteasy-module-1.4
+Package: play-1.2-resteasy-module-1.4
 Architecture: all
 Depends: ${misc:Depends}
 Description: RESTEasy module for Play!
