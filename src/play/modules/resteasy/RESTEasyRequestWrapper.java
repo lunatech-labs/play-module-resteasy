@@ -58,7 +58,7 @@ public class RESTEasyRequestWrapper implements HttpRequest {
 		this.request = request;
 		headers = ServletUtil.extractHttpHeaders(request);
 		uriInfo = ServletUtil.extractUriInfo(request, prefix);
-	      preProcessedPath = uriInfo.getPath(false);
+	    preProcessedPath = uriInfo.getPath(false);
 	}
 
 	public Object getAttribute(String key) {
@@ -136,6 +136,12 @@ public class RESTEasyRequestWrapper implements HttpRequest {
 
 	public InputStream getInputStream() {
 		if (overridenStream != null) return overridenStream;
+		// reset the request body in play 1.2
+		try {
+			request.body.reset();
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to reset stream: new incompatible play version > 1.2 ?", e);
+		}
 		return request.body;
 	}
 
