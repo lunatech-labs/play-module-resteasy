@@ -104,6 +104,8 @@ public class ServletUtil
 		headers.setLanguage(requestHeaders.getFirst(HttpHeaderNames.CONTENT_LANGUAGE));
 
 		String contentType = request.contentType;
+		if(request.headers != null && request.headers.get("content-type") != null && request.headers.get("content-type").value() != null)
+			contentType = request.headers.get("content-type").value();
 		if (contentType != null) headers.setMediaType(MediaType.valueOf(contentType));
 
 		Map<String, Cookie> cookies = extractCookies(request);
