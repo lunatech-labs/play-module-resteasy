@@ -79,6 +79,8 @@ public class RESTEasyRequestWrapper implements HttpRequest {
 		// read it from the body if possible
 		if (getHttpHeaders().getMediaType().isCompatible(MediaType.valueOf("application/x-www-form-urlencoded")))
 			params = DataParser.parsers.get("application/x-www-form-urlencoded").parse(request.body);
+		else if (getHttpHeaders().getMediaType().isCompatible(MediaType.valueOf("multipart/form-data")))
+			params = DataParser.parsers.get("multipart/form-data").parse(request.body);
 		else{
 			params = new HashMap<String, String[]>();
 		}
