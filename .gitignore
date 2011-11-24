@@ -1,11 +1,14 @@
+*.cmd
+.classpath
+.project
+.settings
+build.properties
 bin
 dist
 build-stamp
 configure-stamp
 commands.pyc
-.project
-.classpath
 debian/files
 debian/play-1.1-resteasy-module-*
-lib/play-resteasy-play-module.jar
+eclipse
 lib/play-resteasy-play-module.jar
