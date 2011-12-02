@@ -1,3 +1,9 @@
+play-1.2-resteasy-module-1.4 (1.4.2) oneiric; urgency=low
+
+  * Fixed a NPE raised when a wrong XML parser is used (which is the case when another module defining another parser is loaded before this module in the classpa
+
+ -- Erik Bakker <erik.bakker@lunatech.com>  Fri, 02 Dec 2011 13:44:52 +0100
+
 play-1.2-resteasy-module-1.4 (1.4.1) maverick; urgency=low
 
   * Fixed IOEx
